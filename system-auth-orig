@@ -1,0 +1,38 @@
+#%PAM-1.0
+# This file is auto-generated.
+# User changes will be destroyed the next time authconfig is run.
+
+auth    required        pam_env.so
+auth    sufficient      pam_vas3.so create_homedir get_nonvas_pass store_creds try_first_pass
+auth    requisite       pam_vas3.so echo_return
+auth    sufficient      pam_unix.so nullok try_first_pass use_first_pass
+auth    requisite       pam_succeed_if.so uid >= 500 quiet
+auth    required        pam_deny.so
+auth    required        pam_tally2.so onerr=fail no_magic_root deny=5 reset
+
+auth        required       pam_lastlog.so inactive=60
+auth        sufficient     pam_unix.so nullok try_first_pass
+
+account sufficient      pam_vas3.so
+account requisite       pam_vas3.so echo_return
+account required        pam_unix.so
+account sufficient      pam_succeed_if.so uid < 500 quiet
+account required        pam_permit.so
+account required        pam_tally2.so onerr=fail no_magic_root deny=5 reset
+account required        pam_tally2.so
+
+password        sufficient      pam_vas3.so
+password        requisite       pam_vas3.so echo_return
+password        requisite       pam_cracklib.so try_first_pass retry=3
+password        sufficient      pam_cracklib.so minclass=3 lcredit=1 ucredit=1 dcredit=1 ocredit=1 difok=5
+password        sufficient      pam_unix.so remember=13 sha512 shadow nullok try_first_pass use_authtok
+password        required        pam_cracklib.so minlen=15 dcredit=1 ucredit=1 lcredit=1 ocredit=1 reject_username
+password        required        pam_deny.so
+password        required        pam_passwdqc.so min=disabled,8,8,8,8 passphrase=0 random=0 enforce=everyone
+
+session required        pam_vas3.so create_homedir
+session requisite       pam_vas3.so echo_return
+session optional        pam_keyinit.so revoke
+session required        pam_limits.so
+session [success=1 default=ignore]      pam_succeed_if.so service in crond quiet use_uid
+session required        pam_unix.so

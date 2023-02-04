@@ -1,0 +1,23 @@
+world writable directires : stickybit set
+
+verifty >> df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d \( -perm -0002 -a ! -perm -1000 \) 2>/dev/null
+
+remediate>> df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d -perm -0002 2>/dev/null | xargs chmod a+t
+
+-------------------
+Ensure no unowned files or directories exist 
+
+df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -nouser
+---------------------
+Ensure no ungrouped files or directories exist 
+
+---------------------
+
+permissions on all logfiles are not configured as per techspec
+
+$umask 0077  # done by change CHG000447370 to remediate logfile permission
+
+$umask 0077  # Reset the umask so /var/log/secure
+
+-----------------------
+

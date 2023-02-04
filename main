@@ -1,0 +1,215 @@
+
+repo server : aute2ap000nabzm.bastest.aurtest.national.com.au
+=============================================================
+
+#AD.1.1.6.0	"add in system-auth & password-auth
+auth required pam_tally2.so deny=5
+account required pam_tally2.so
+
+#AD.1.2.4.0	use of pam_tally.so Vs pam_tally2.so
+
+#AD.70.1.2.18	Ensure inactive password lock is 60 days
+auth        required       pam_lastlog.so inactive=60
+auth        sufficient     pam_unix.so nullok try_first_pass
+
+#AD.1.1.4.1	"For the PAM entry for verify >>  egrep '^password\s+.*pam_unix.so' /etc/pam.d/*-auth
+password        sufficient      pam_unix.so remember=13 use_authtok sha512 shadow
+
+#AD.6.0.2	Complex passwords should be enforced through the systemconfiguration and password policy. Must include at least one character each from at least three of the following: Upper-case letters Lower-case letters Numeric digits Non-alpha-numeric characters (e.g.!@#$%.
+
+password        required        pam_cracklib.so minclass=3 lcredit=1 ucredit=1 dcredit=1 ocredit=1 difok=5
+password        required        pam_cracklib.so minlen=15 dcredit=1 ucredit=1 lcredit=1 ocredit=1 reject_username
+
+
+#AD.1.1.6.0.1
+auth required pam_tally2.so deny=5
+account required pam_tally2.so
+
+#AD.1.1.6.0.2	
+auth required pam_tally2.so
+deny=5 account required pam_tally2.so
+
+#AD.1.4.1	
+auth required pam_deny.so
+account required pam_deny.so
+
+Note: Use of full path and/or $ISA/$LIB to pam modules is optional."
+
+AD.6.0.9	 Any user account that has not logged into the system for 90 days should be disabled.
+AD.70.1.5.38 Any user account that has not logged into the system for 90 days should be disabled.
+
+================================default passwd==================================
+AD.2.1.3.2	"For SLES where pam_unix2 module is in use (default on SLES 11):
+/etc/default/passwd must include the following
+CRYPT=sha-512
+CRYPT_FILES=sha-512
+
+Note: It is acceptable to replace ""sha-512"" with ""sha-256"""
+
+>>> echo -e "CRYPT=sha-512\nCRYPT_FILES=sha-512" >>/etc/default/passwd 
+==============================login.def================================================
+AD.2.1.3.3	"For SLES where pam_unix module is in use (default on SLES 12):
+/etc/login.defs must include the following
+ENCRYPT_METHOD SHA512
+
+Note: It is acceptable to replace ""SHA512"" with ""SHA256"""
+
+>>> echo "ENCRYPT_METHOD SHA512" >> /etc/login.defs
+---------------------------------------------------------
+
+AD.1.8.8&AD.1.8.12.4	"File permissions must be set:
+    * rwx r-x --- (or more restrictive)"
+----------------------------------------------------------
+
+AD.1.8.14.1	Each active entry must specify full path of the file/command/script to be executed
+
+--------------------------------------------------------------
+
+AD.1.8.22.2	Files in the location listed may not have both the other-write and any execute permissions set.
+AD.1.8.22.4	Files in the location listed may not have both the other-write and any execute permissions set.
+
+=====================================================================================
+AD.1.9.1.3	/etc/profile.d/IBMsinit.sh   ;; umask 077
+AD.1.9.1.2	"umask x77
+
+Red Hat: Configured in /etc/bashrc"
+AD.1.9.1.7	"Either does not override the UMASK for the user, or encodes:
+  umask 077
+as the UMASK setting.
+
+Note:  The requirement is that the skeleton file complies to ensure an ID is created with a secure umask.  It is understood that the user may modify this file once it is copied into their $HOME.
+
+Note:  There is no requirement these files exist; but if they do, they must conform to the requirement.
+Note:  This guidance is only sufficient for user shells: /bin/csh, /bin/tcsh, /bin/sh, /bin/ksh, and /bin/bash.  If users are permitted other login shells, similar controls must be established.  /bin/false and other 'no login' shells are exempt from this requirement."
+
+action>>>
+/etc/profile.d/IBMsinit.sh
+--------------------------------
+if [ $UID -gt 199 ]; then
+umask 077
+fi
+------------------------------
+/etc/profile.d/IBMsinit.csh
+------------------------------
+if ($uid > 199) then
+umask 077
+endif
+------------------------------
+
+
+
+
+====================================================================
+
+AD.6.0.28	Permissions should be set to 700
+================rsyslog======================
+AD.70.1.2.7	Ensure permissions on all logfiles are configured
+AD.70.1.2.6	Ensure remote rsyslog messages are only accepted on designated log hosts.
+AD.70.1.2.4	Ensure rsyslog default file permissions configured 
+========================================== 
+AD.70.1.2.14	Ensure cron is restricted to authorized users 
+
+AD.70.1.2.33	Ensure all groups in /etc/passwd exist in /etc/group 
+AD.70.1.2.36	Ensure shadow group is empty 
+AD.70.1.2.37	Ensure all users' home directories exist 
+
+===========AUDIT ==================================
+AD.6.0.13	File system activities ie. the creation of exported filesystems and remote file system mounting will be captured
+AD.70.1.5.30	Ensure login and logout events are collected 
+AD.70.1.5.31	Ensure discretionary access control permission modification events are collected 
+AD.70.1.5.35	Ensure kernel module loading and unloading is collected 
+#files created to cover all.
+
+AD.70.1.5.23	Ensure auditing for processes that start prior to auditd is enabled     # Kernel level
+AD.70.1.5.29	Ensure events that modify the system's network environment are collected  # file start from 50.
+============MODPROBE===========================
+AD.70.1.5.17	Ensure DCCP is disabled 
+AD.70.1.5.18	Ensure SCTP is disabled 
+AD.70.1.5.19	Ensure RDS is disabled 
+AD.70.1.5.20	Ensure TIPC is disabled 
+
+file created
+===========================================
+
+
+AD.70.1.5.37	"The root user should not have the current directory in its path statement.
+Refer to Doc Control Tab"
+
+==================
+AD.70.1.4.11	Ensure sticky bit is set on all world-writable directories 
+AD.70.1.4.66	Ensure no world writable files exist
+
+===========================================
+AD.70.1.4.15	Ensure gpgcheck is globally activated 
+
+AD.70.1.4.18	Ensure permissions on bootloader config are configured 
+
+
+AD.70.1.4.23	Ensure XD/NX support is enabled 
+AD.70.1.4.25	Ensure prelink is disabled 
+
+===========PERMISSION================
+AD.70.1.4.58	Ensure permissions on /etc/passwd are configured 
+AD.70.1.4.59	Ensure permissions on /etc/passwd- are configured 
+AD.70.1.4.60	Ensure permissions on /etc/group are configured 
+AD.70.1.4.61	Ensure permissions on /etc/group- are configured 
+AD.70.1.4.62	Ensure permissions on /etc/shadow are configured 
+AD.70.1.4.63	Ensure permissions on /etc/shadow- are configured 
+AD.70.1.4.64	Ensure permissions on /etc/gshadow are configured 
+AD.70.1.4.65	Ensure permissions on /etc/gshadow- are configured 
+===========================================================
+ 
+AD.70.1.4.67	Ensure no unowned files or directories exist 
+AD.70.1.4.68	Ensure no ungrouped files or directories exist 
+AD.70.1.4.69	Audit SUID executables 
+============SYSCTL========================
+AD.6.0.49	add the fs.suid_dumpable = 1 in my /etc/sysctl.conf file and when i again run /sbin/sysctl -a | grep fs.suid_dumpable
+AD.70.1.5.6	Ensure suspicious packets are logged 
+
+>>> apend these lines for both
+fs.suid_dumpable = 1
+net.ipv4.conf.all.log_martians = 1
+net.ipv4.conf.default.log_martians = 1
+===================================================================
+AD.6.0.27	Unprivileged users PATH variables should be restricted. Unprivileged users PATH variables will only be restricted in the following profile files: /etc/profile & ~/.profile ~/.login and ~/.cshrc
+ 
+AD.70.1.2.29	Ensure users' dot files are not group or world writable 
+AD.70.1.4.26	Ensure message of the day is configured properly 
+AD.1.1.8.2	Each uid must only be used once
+
+AD.70.1.4.21	Ensure interactive boot is not enabled 
+
+=================================================================
+AD.70.1.4.29	Ensure permissions on /etc/motd are configured 
+=================================================================
+
+AD.1.1.8.3	Each GID must only be used once
+AD.70.1.4.70	Audit SGID executables
+
+===========================================================================
+AD.1.1.7.2	Login access to account must be restricted to the physical console, or to a method that provides accountability to an individual.
+==========================================================================
+
+
+If SYS_GID_MAX is not set, then a group with a GID which is less than GID_MIN.
+Exception: The group 'users' will have a GID of 100, and is not a group permitted to own an OSR.
+
+Note: It is not valid for an OSR to be owned by a gid which does not have a group defined to it with in /etc/group."
+
+AD.1.8.13.1.2	Must be owned an id/group as identified in section 5.0 'The following system ids and group ids must own OSRs', or other id controlled as an id which is subject to being one which has Security & System Administrative Authority.
+
+
+
+AD.1.1.3.2	Field 4 of /etc/shadow must be 1 for all userids with a password assigned.  Exception: for shared userIDs where individual accountability is maintained by process controls, it may be 0.
+
+
+AD.1.1.10.2&AD.1.1.13.3	FTP Enabled. Please remove FTP
+
+
+===========================================================================
+
+ 
+========================================================
+AD.1.1.2.2	The second field /etc/passwd may not be null.
+	
+
