@@ -1,0 +1,16 @@
+---
+  - name: ssh remediation
+    hosts: all
+    
+    tasks:
+      - name: "Example1: Validate if a String or line is present in the file"
+        become: yes
+        become_user: root
+        tags: example1
+        lineinfile:
+          path: /etc/ssh/test_ssh
+          line: "LogLevel debug"
+          state: present
+          backup: yes
+        check_mode: yes
+        register: example1out
