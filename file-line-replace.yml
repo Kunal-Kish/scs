@@ -8,13 +8,13 @@
         become_user: root
         tags: example1
         lineinfile:
-          path: /etc/ssh/test_ssh
+          path: /etc/ssh/sshd_config
           # The String to Search
           regexp: "LogLevel warn" 
           # The String to Replace
-          line: "LogLevel debug"
+          line: "PermitRootLogin No"
           state: present
-          line: "PermitRootLogin Yes"
+          line: "MaxSession 10"
           state: present
           backup: yes
         
