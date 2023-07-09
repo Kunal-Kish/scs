@@ -1,0 +1,10 @@
+- name: Template a file to /etc/files.conf
+  hosts: all
+  tasks: 
+   - template:
+       backup: True
+       src: foo.j2
+       dest: /tmp/file.conf
+       owner: bin
+       group: wheel
+       mode: '0644'

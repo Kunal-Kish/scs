@@ -1,0 +1,24 @@
+---
+- name: testing for ansible loop
+  hosts: all 
+  vars:
+     data:
+       - kishan
+       - shyam
+       - kishor
+       - suresh
+
+  tasks:    
+#    - name: loop testing print names
+#      debug:
+#        msg: "{{ item.name }}"
+    - name: name should present and in user groups
+      user: 
+        name: "{{ item }}"
+        state: absent
+       # groups: "{{ item.groups }}"
+      loop:
+         "{{ data }}"
+        #  groups: wheel
+
+    

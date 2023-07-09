@@ -1,0 +1,9 @@
+---
+- name: this is test yaml file for ping
+  hosts: all
+  tasks:
+    - ping:
+  # debug: 
+  #  msg: "this is test" 
+...
+

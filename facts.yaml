@@ -1,0 +1,10 @@
+---
+- name: facts test 
+  hosts: all 
+  vars: 
+    hostname :  "{{ ansible_facts.hostname }}"
+    ipaddress : "{{ ansible_default_ipv4.address }}"
+  tasks:  
+   - debug:
+       msg: my host name is {{ hostname }} and ipaddress is {{  ipaddress }}
+... 
