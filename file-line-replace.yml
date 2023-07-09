@@ -8,7 +8,7 @@
         become_user: root
         tags: example1
         lineinfile:
-          path: /etc/ssh/sshd_config
+          path: /etc/ssh/test_ssh
           # The String to Search
           regexp: "PermitRootLogin yes" 
           # The String to Replace
