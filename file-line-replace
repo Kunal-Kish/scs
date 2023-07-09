@@ -1,0 +1,19 @@
+---
+  - name: Examples of lineinfile
+    hosts: web
+    
+    tasks:
+      - name: "Example1: Validate if a String or line is present in the file"
+        become: yes
+        become_user: root
+        tags: example1
+        lineinfile:
+          path: /etc/ssh/test_ssh
+          # The String to Search
+          regexp: "LogLevel warn" 
+          # The String to Replace
+          line: "LogLevel debug"
+          state: present
+          backup: yes
+        
+        register: example1out
