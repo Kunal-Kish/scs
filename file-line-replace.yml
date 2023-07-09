@@ -1,6 +1,6 @@
 ---
   - name: Examples of lineinfile
-    hosts: web
+    hosts: all
     
     tasks:
       - name: "Example1: Validate if a String or line is present in the file"
