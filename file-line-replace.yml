@@ -10,7 +10,7 @@
         lineinfile:
           path: /etc/ssh/sshd_config
           # The String to Search
-          regexp: "LogLevel warn" 
+          regexp: "PermitRootLogin yes" 
           # The String to Replace
           line: "PermitRootLogin No"
           state: present
