@@ -15,7 +15,7 @@
     - name: name should present and in user groups
       user: 
         name: "{{ item }}"
-        state: absent
+        state: present
        # groups: "{{ item.groups }}"
       loop:
          "{{ data }}"
