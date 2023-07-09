@@ -12,5 +12,4 @@
           line: "LogLevel debug"
           state: present
           backup: yes
-        check_mode: yes
-        register: example1out
+            register: example1out
